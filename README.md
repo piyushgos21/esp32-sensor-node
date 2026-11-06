@@ -1,65 +1,207 @@
-# Project Name
+# Environmental & Motion Sensor Node
 
-Environmental & Motion Sensor Node
+> A portable ESP32 sensor node on a custom two-layer PCB, designed in Altium Designer for the AMP Lab at Virginia Tech.
 
-## Project Owner
+## Contact
 
-**Name:** Piyush Goswami
-**Virginia Tech Email:** piyushgos21@vt.edu
+- **Name:** Piyush Goswami
+- **Virginia Tech Email:** piyushgos21@vt.edu
+- **GitHub:** https://github.com/piyushgos21
+- **LinkedIn** https://www.linkedin.com/in/piyush-goswami-113b7840a/ 
 
 ## Project Overview
 
-This project is a custom two-layer PCB, designed in Altium Designer, for a small battery-powered sensor node. An ESP32-WROOM-32E module reads temperature, humidity and pressure from a BME280 and acceleration and rotation from an MPU6050. It shows live readings on an SSD1306 OLED and sends the data over Wi-Fi or Bluetooth LE. The board runs from USB-C or a 500 mAh LiPo cell, with onboard charging and 3.3 V regulation.
+**Goal:** Design, assemble, and test a compact sensor-node PCB that measures environmental conditions and motion, displays readings locally, and transmits data wirelessly.
 
-I'm building it for two reasons. It is my first complete PCB, so it gives me a chance to work through the whole flow from schematic to a board I can test. It also produces timestamped sensor data, which I want to use later to train a small motion-classification model for my machine learning minor. That model is outside the scope of this project; this repository only covers the hardware.
+The planned board uses an ESP32-WROOM-32E module to read temperature, humidity, and pressure from a BME280 and acceleration and angular velocity from an MPU6050. An SSD1306 OLED displays live measurements, while Wi-Fi or Bluetooth LE provides wireless communication.
+
+The board is intended to operate from USB-C or a 500 mAh LiPo battery, with onboard charging and 3.3 V regulation. The final power circuit will be checked during schematic development.
+
+### Background
+
+This is my first complete custom PCB project. I want to work through the full process, from selecting components and drawing a schematic to assembling a board and debugging it in the AMP Lab.
+
+I also want to structure the sensor output so it can support a future AI Machine Learning model, connecting this project to my interest in machine learning. Training that model is outside the current project scope. This project only focuses on the hardware and the firmware needed to test and demonstrate it.
+
+### Design Targets
+
+| Target | Planned Implementation |
+|---|---|
+| PCB | Custom two-layer board |
+| Design software | Altium Designer |
+| Controller | ESP32-WROOM-32E-N4 |
+| Environmental sensing | BME280: temperature, humidity, and pressure |
+| Motion sensing | MPU6050: acceleration and angular velocity |
+| Local display | SSD1306 I²C OLED |
+| Peripheral interface | One shared I²C bus |
+| Wireless communication | Wi-Fi or Bluetooth LE |
+| Power | USB-C and a 500 mAh single-cell LiPo battery |
+| Logic supply | 3.3 V |
+
+These are planned targets. Exact components and circuit details will be finalized during schematic review.
 
 ## What I Hope to Learn
 
-- The full Altium Designer workflow: schematic capture, building and sourcing footprints, layout,     ERC and DRC, and generating manufacturing files.
-- Power design for a portable board: LiPo charging, 3.3 V regulation, and choosing parts that can handle the ESP32's current peaks.
-- Putting several I2C devices on one bus and bringing them up in firmware.
-Structuring sensor output so it can be used for machine learning later.
-Taking a design through fabrication, hand assembly, bring-up and debugging.
+**PCB design**
+- Schematic capture, component library sourcing, and footprint verification in Altium Designer.
+- Component placement, routing, electrical rule checks (ERC), and design rule checks (DRC).
+- Generating manufacturing and assembly files.
+
+**Power design**
+- LiPo charging and selecting a suitable USB/battery power arrangement.
+- Voltage regulation and decoupling.
+- Choosing components that can handle the ESP32's current demands.
+
+**Embedded systems**
+- Connecting multiple I²C devices on one bus.
+- Checking device addresses, pull-up resistors, and logic levels.
+- Reading sensors, updating a display, and transmitting measurements wirelessly.
+- Structuring timestamped sensor output for future analysis.
+
+**Assembly and testing**
+- Soldering and assembling a custom PCB in the AMP Lab.
+- Bringing up the power supply, microcontroller, and peripherals in stages.
+- Debugging hardware and documenting test results.
 
 ## Design and Implementation
 
-Currently, schematic is in progress. 
+**Current stage:** The project proposal has been approved. Component selection and schematic development are the next steps.
+
+![Environmental and Motion Sensor Node block diagram](./hero.png)
+
+*Proposal-stage block diagram. The power path will be reviewed and updated as the schematic develops.*
+
+The system has five main parts:
+
+1. **Controller:** An ESP32-WROOM-32E-N4 handles sensor readings, display updates, and wireless communication.
+2. **Sensors:** A BME280 module measures environmental conditions, and an MPU6050 module measures motion.
+3. **Display:** An SSD1306 OLED shares the I²C bus with the sensors and displays live measurements.
+4. **Programming and controls:** A USB-C connector and FT231XS-R USB-to-UART bridge provide the programming interface. EN and BOOT buttons and indicator LEDs support testing and debugging.
+5. **Power:** The proposed design includes an MCP73831 LiPo charger, a 500 mAh battery, and an AP2112K 3.3 V regulator. Supporting circuitry and the USB/battery power arrangement still need to be finalized.
+
+### Schematic Review Priorities
+
+Before moving to PCB layout, I plan to check:
+
+- Component symbols and footprints against manufacturer datasheets.
+- Exact sensor and display module pinouts and dimensions.
+- USB/battery power selection and operation while charging.
+- Battery protection requirements.
+- Regulator voltage headroom, current capacity, and thermal limits.
+- ESP32 programming, boot/reset circuitry, and decoupling.
+- I²C addresses, pull-up resistors, and logic levels.
+
+### Planned Testing
+
+Testing will begin with the power rails, followed by ESP32 programming and individual sensor checks. Once each peripheral works, I will test the display and wireless communication together.
+
+Measurements, problems, and design changes will be recorded as the project progresses.
 
 ## Bill of Materials
 
-Document the major components and materials used for the project.
+The following estimates come from the project proposal. Component selections and prices will be updated after schematic review.
 
-| Item | Quantity | Estimated Cost | Link |
-|---|---:|---:|---|
-| Component | 1 | $0.00 | Link |
+Multipacks and the PCB fabrication run include spares. This budget does not cover five fully assembled sensor nodes.
 
-**Estimated Total Cost:** $89.5
+| Item | Purchase Quantity | Estimated Line Cost | Link |
+|---|---|---:|---|
+| ESP32-WROOM-32E-N4 | 1 | $5.00 | [DigiKey](https://www.digikey.com/en/products/detail/espressif-systems/ESP32-WROOM-32E-N4/11613125) |
+| FT231XS-R USB-to-UART bridge | 1 | $1.00 | [DigiKey](https://www.digikey.com/en/products/detail/ftdi-future-technology-devices-international-ltd/FT231XS-R/3029139) |
+| BME280 sensor module | 1 two-pack | $14.00 | [Proposal selection](https://www.amazon.com/dp/B0DHPCFJD6) |
+| MPU6050 sensor module | 1 | $8.50 | [Proposal selection](https://www.amazon.com/dp/B0HF431N5W) |
+| SSD1306 I²C OLED module | 1 three-pack | $10.00 | [Proposal selection](https://www.amazon.com/dp/B0D2RMQQHR) |
+| MCP73831T-2ACI/OT LiPo charger | 1 | $1.00 | [DigiKey](https://www.digikey.com/en/products/detail/microchip-technology/MCP73831T-2ACI-OT/964301) |
+| AP2112K-3.3TRG1 regulator | 1 | $1.00 | [DigiKey](https://www.digikey.com/en/products/detail/diodes-incorporated/AP2112K-3-3TRG1/4470746) |
+| LJ503035 500 mAh LiPo battery | 1 | $12.00 | [DigiKey](https://www.digikey.com/en/products/detail/jameco-electronics/LJ503035/25966108) |
+| 10174570-00A11LF USB-C connector | 1 | $1.00 | [DigiKey](https://www.digikey.com/en/products/detail/amphenol-cs-fci/10174570-00A11LF/24366703) |
+| Passives, headers, buttons, LEDs, and battery connector | 1 set | ~$7.00 | [Detailed breakdown below](#supporting-components) |
+
+### Supporting Components
+Detailed preliminary selections from the project proposal. Quantities and component choices will be checked during schematic development. Prices are proposal estimates, not current supplier quotes.
+
+| Part | Manufacturer Part Number | Quantity | Estimated Unit Cost | Estimated Line Cost |
+|---|---|---:|---:|---:|
+| 10 kΩ resistor | [RC0805FR-0710KL](https://www.digikey.com/en/products/detail/yageo/RC0805FR-0710KL/727535) | 2 | $0.10 | $0.20 |
+| 5.1 kΩ resistor — USB-C CC pins | [RC0805FR-075K1L](https://www.digikey.com/en/products/detail/yageo/RC0805FR-075K1L/727988) | 2 | $0.10 | $0.20 |
+| 4.99 kΩ resistor — charger programming | [RC0805FR-074K99L](https://www.digikey.com/en/products/detail/yageo/RC0805FR-074K99L/727938) | 1 | $0.10 | $0.10 |
+| 4.7 kΩ resistor — I²C pull-ups | [RC0805FR-074K7L](https://www.digikey.com/en/products/detail/yageo/RC0805FR-074K7L/727929) | 2 | $0.10 | $0.20 |
+| 1 kΩ resistor — LEDs | [RC0805FR-071KL](https://www.digikey.com/en/products/detail/yageo/RC0805FR-071KL/727444) | 3 | $0.10 | $0.30 |
+| 0.1 µF capacitor, 50 V | [CL21B104KBCNNNC](https://www.digikey.com/en/products/detail/samsung-electro-mechanics/CL21B104KBCNNNC/3886661) | 6 | $0.10 | $0.60 |
+| 10 µF capacitor, 25 V | [CL21A106KAYNNNE](https://www.digikey.com/en/products/detail/samsung-electro-mechanics/CL21A106KAYNNNE/3888549) | 4 | $0.30 | $1.20 |
+| Red LED | [150080RS75000](https://www.digikey.com/en/products/detail/w%C3%BCrth-elektronik/150080RS75000/4489918) | 2 | $0.25 | $0.50 |
+| Green LED | [150080GS75000](https://www.digikey.com/en/products/detail/w%C3%BCrth-elektronik/150080GS75000/4489915) | 1 | $0.25 | $0.25 |
+| Tactile button — EN and BOOT | [B3U-1000P](https://www.digikey.com/en/products/detail/aratas-formerly-omron-components/B3U-1000P/1534338) | 2 | $0.50 | $1.00 |
+| Female header, 1×4 | [PPPC041LFBN-RC](https://www.digikey.com/en/products/detail/sullins-connector-solutions/PPPC041LFBN-RC/810176) | 2 | $0.50 | $1.00 |
+| Female header, 1×8 | [PPPC081LFBN-RC](https://www.digikey.com/en/products/detail/sullins-connector-solutions/PPPC081LFBN-RC/810180) | 1 | $0.80 | $0.80 |
+| JST-PH battery connector | [S2B-PH-SM4-GW-TB](https://www.digikey.com/en/products/detail/jst-sales-america-inc/s2b-ph-sm4-gw-tb/27506773) | 1 | $0.50 | $0.50 |
+| **Total** | | | | **$6.85** |
+
+The main BOM rounds this subtotal to **$7.00**. This breakdown is already included in the overall project budget and should not be added a second time.
+
+**Capacitor sourcing note:** The proposal identified GRM21BR61E106KA73L as a possible alternative to CL21A106KAYNNNE. Its specifications, footprint compatibility, and availability will be checked before ordering.
+| Two-layer PCB fabrication | 5 bare boards | ~$25.00 | Proposal estimate |
+
+**Estimated Total Cost: $85.50**
+This is the preliminary proposal estimate. Final costs will be updated after component selection and confirmation of shipping, taxes, and fabrication costs.
 
 ## Timeline and Milestones
 
-Outline the major stages of the project and update them as work progresses.
-
 | Milestone | Target Date | Status |
 |---|---|---|
-| Project planning | 2026-11-08 | In progress |
-| Initial design (Schematic complete) | 2026-12-15 | Not Started |
-| PCB Layout complete, boards ordered | 2027-1-15 | Not Started |
-| Prototype | 2027-02-15 | Not Started |
-| Testing and bring-up | 2027-03-01 | Not Started |
-| Project Completiion | 2027-03-15 | Not Started |
+| Project proposal presented to the AMP Lab and approved | Oct 30, 2026 | Complete |
+| Repository created and initial README written | Nov 1, 2026 | Complete |
+| Project planning and preliminary component review | Nov 8, 2026 | In progress |
+| Initial design and schematic complete | Dec 15, 2026 | Not started |
+| PCB layout complete and boards ordered | Jan 15, 2027 | Not started |
+| Prototype assembled | Feb 15, 2027 | Not started |
+| Testing and bring-up | Mar 1, 2027 | Not started |
+| Project completion | Mar 15, 2027 | Not started |
+
+Target dates will be updated as design, fabrication, and testing progress.
 
 ## Progress Log
 
+### 2026-10-30
 
-### YYYY-MM-DD
+Presented my Environmental & Motion Sensor Node project proposal to the AMP Lab and received approval. The proposal covered the system concept, learning goals, preliminary components and budget, and the plan for designing and building a custom PCB.
 
-Describe what you worked on, what was completed, any problems you encountered, and what you plan to work on next.
+### 2026-11-01
+
+Created this repository and wrote the initial README to document the project overview, learning goals, and planned milestones.
+
+### 2026-11-06
+
+Updated the README, including all the components I plan to use. 
+
+## What's Next
+
+- Finalize component selections and review their datasheets.
+- Verify schematic symbols, PCB footprints, and sensor/display module pinouts.
+- Create the Altium PCB project and begin the schematic.
+- Resolve the USB/battery power arrangement and draft the power and ESP32 sections.
+- Add the USB-to-UART interface, sensors, display, buttons, and indicator LEDs.
+- Review the schematic and resolve electrical rule check issues before starting PCB layout.
 
 ## Project Files
 
+Currently included:
+
+- [README.md](./README.md): Project overview, component plan, timeline, and progress log.
+- [hero.png](./hero.png): Proposal-stage system block diagram.
+
+Files to be added as the project develops:
+
+- Altium project and schematic files.
+- PCB layout files.
+- Verified component libraries.
+- Detailed bill of materials.
+- Firmware for testing and demonstrations.
+- Manufacturing files.
+- Assembly photos and test results.
 
 ## Useful Links
 
-
-## Project Image
-
+- [Altium Designer Documentation](https://www.altium.com/documentation/altium-designer)
+- [Creating an Altium Project and Schematic](https://www.altium.com/documentation/altium-designer/tutorial/creating-project-schematic-document)
+- [Microchip MCP73831 Product Information](https://www.microchip.com/en-us/product/MCP73831)
+- [Microchip System Power-Path Reference Design](https://www.microchip.com/en-us/development-tool/MCP7383XRD-PPM)
